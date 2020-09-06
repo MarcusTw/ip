@@ -13,6 +13,7 @@ import duke.exception.DukeEmptyIndexException;
 import duke.exception.DukeEmptyKeywordException;
 import duke.exception.DukeInvalidDataException;
 import duke.exception.DukeInvalidDateTimeInputException;
+import duke.exception.DukeInvalidUpdateException;
 import duke.ui.Ui;
 
 /**
@@ -77,6 +78,8 @@ public class Duke {
         } catch (DukeInvalidDateTimeInputException e) {
             return e.getMessage();
         } catch (DukeEmptyKeywordException e) {
+            return e.getMessage();
+        } catch (DukeInvalidUpdateException e) {
             return e.getMessage();
         }
     }

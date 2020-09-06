@@ -1,10 +1,12 @@
 package duke.backend;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import duke.exception.DukeInvalidUpdateException;
 import duke.ui.Ui;
 import duke.exception.DukeInvalidIndexException;
 import duke.task.Deadline;
@@ -175,5 +177,34 @@ public class TaskList {
             }).collect(Collectors.toList());
         return getListAsStringFromList(tasksWithKeyword,
                 "No tasks with " + keyword + " was found");
+    }
+
+    public String editDateTime(String description, LocalDate date, LocalTime time)
+            throws DukeInvalidUpdateException {
+        Task task = list.stream().filter(
+            t -> t.getDescription().contains(description)
+        ).findFirst().orElseThrow(DukeInvalidUpdateException::new);
+        int index = list.indexOf(task);
+        if (task instanceof Deadline) {
+            list.set(index, ((Deadline) task).editDateTime(date, time));
+        } else if (task instanceof Event) {
+            list.set(index, ((Event) task).editDateTime(date, time));
+        } else {
+            throw new DukeInvalidUpdateException();
+        }
+        return "Task is edited\n" + Ui.TWO_INDENT + list.get(index);
+    }
+
+    public String editDateTime(int index, LocalDate date, LocalTime time)
+            throws DukeInvalidUpdateException {
+        Task task = list.get(index);
+        if (task instanceof Deadline) {
+            list.set(index, ((Deadline) task).editDateTime(date, time));
+        } else if (task instanceof Event) {
+            list.set(index, ((Event) task).editDateTime(date, time));
+        } else {
+            throw new DukeInvalidUpdateException();
+        }
+        return "Task is edited\n" + Ui.TWO_INDENT + list.get(index);
     }
 }

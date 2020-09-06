@@ -49,6 +49,17 @@ public class Event extends Task {
     }
 
     /**
+     * Returns an event with new atDate and atTime.
+     *
+     * @param date The atDate.
+     * @param time The atTime.
+     * @return
+     */
+    public Event editDateTime(LocalDate date, LocalTime time) {
+        return new Event(this.description, date, time);
+    }
+
+    /**
      * Returns the String representation of the Event task.
      * The occurrence is in the format "MMM-dd-yyyy h.mma".
      *

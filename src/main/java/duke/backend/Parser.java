@@ -13,6 +13,7 @@ import duke.command.ByeCommand;
 import duke.command.Command;
 import duke.command.DeleteCommand;
 import duke.command.DoneCommand;
+import duke.command.EditDateTimeCommand;
 import duke.command.FindCommand;
 import duke.command.ListCommand;
 import duke.command.ListDateCommand;
@@ -23,6 +24,7 @@ import duke.exception.DukeEmptyDescriptionException;
 import duke.exception.DukeEmptyIndexException;
 import duke.exception.DukeEmptyKeywordException;
 import duke.exception.DukeInvalidDateTimeInputException;
+import duke.exception.DukeInvalidUpdateException;
 import duke.exception.DukeUnknownInputException;
 import duke.task.Deadline;
 import duke.task.Event;
@@ -240,6 +242,75 @@ public class Parser {
     }
 
     /**
+     * Parses the user input into an EditDateTimeCommand.
+     *
+     * @param command The user input.
+     * @return The required EditDateTimeCommand.
+     * @throws DukeInvalidUpdateException If description is invalid.
+     * @throws DukeInvalidDateTimeInputException If date or time is invalid.
+     */
+    public static Command updateDateTime(String command)
+            throws DukeInvalidUpdateException, DukeInvalidDateTimeInputException {
+        try {
+            String[] tokens = command.split("update ");
+            String descriptionAndDateTime = tokens[1];
+            return updateDateTimeParser(descriptionAndDateTime);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new DukeInvalidUpdateException();
+        } catch (IndexOutOfBoundsException e) {
+            throw new DukeInvalidUpdateException();
+        }
+    }
+
+    private static Command updateDateTimeParser(String brokenCommand) throws DukeInvalidDateTimeInputException {
+        String timeString = "";
+        String dateString = "";
+        String[] descriptionTokens = brokenCommand.split(" ");
+        int len = descriptionTokens.length;
+        if (len < 2) {
+            throw new DukeInvalidDateTimeInputException("Cannot update something to empty date!");
+        } else if (descriptionTokens[len - 1].length() == 4) {
+            timeString = " " + descriptionTokens[len - 1];
+            dateString = descriptionTokens[len - 2];
+            len -= 2;
+        } else {
+            dateString = descriptionTokens[len - 1];
+            len -= 1;
+        }
+        List<LocalDateTime> ldtList = getCustomDateTimeList(dateString + timeString);
+        LocalDate date = ldtList.get(0).toLocalDate();
+        LocalTime time = null;
+        if (ldtList.size() == 2) {
+            time = ldtList.get(1).toLocalTime();
+        }
+        try {
+            int index = Integer.parseInt(descriptionTokens[0]);
+            if (index <= 0) {
+                throw new DukeInvalidUpdateException();
+            }
+            return new EditDateTimeCommand(
+                Integer.parseInt(descriptionTokens[0]),
+                date, time);
+        } catch (NumberFormatException | DukeInvalidUpdateException e) {
+            return new EditDateTimeCommand(
+                descriptionCombiner(descriptionTokens, len),
+                date, time);
+        }
+    }
+
+    private static String descriptionCombiner(String[] arr, int index) {
+        String description = "";
+        for (int i = 0; i < index; i++) {
+            description += arr[i];
+            if (i != index - 1) {
+                //add a space
+                description += " ";
+            }
+        }
+        return description;
+    }
+
+    /**
      * Parses the user input and checking the type of command.
      * Returns the correct command after calling for correct parser.
      *
@@ -254,7 +325,7 @@ public class Parser {
     public static Command parse(String command) throws DukeEmptyIndexException,
             DukeEmptyDescriptionException, DukeEmptyAtException,
             DukeEmptyByException, DukeInvalidDateTimeInputException,
-            DukeEmptyKeywordException {
+            DukeEmptyKeywordException, DukeInvalidUpdateException {
         if (command.equals("bye")) {
             return new ByeCommand();
         } else if (command.equals("list")) {
@@ -267,6 +338,8 @@ public class Parser {
             return delete(command);
         } else if (command.startsWith("find")) {
             return find(command);
+        } else if (command.startsWith("update")) {
+            return updateDateTime(command);
         } else {
             try {
                 return add(command);

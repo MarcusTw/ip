@@ -54,7 +54,7 @@ public class Ui {
     //
     //    static final String HORIZONTAL_LINE =
     //            "____________________________________________________________";
-    static final String TWO_INDENT = "  ";
+    public static final String TWO_INDENT = "  ";
 
     /**
      * Returns the Bye message.

@@ -49,6 +49,17 @@ public class Deadline extends Task {
     }
 
     /**
+     * Returns a deadline with new byDate and byTime.
+     *
+     * @param date The byDate.
+     * @param time The byTime.
+     * @return
+     */
+    public Deadline editDateTime(LocalDate date, LocalTime time) {
+        return new Deadline(this.description, date, time);
+    }
+
+    /**
      * Returns the String representation of the Deadline task.
      * The deadline is in the format "MMM-dd-yyyy h.mma".
      *

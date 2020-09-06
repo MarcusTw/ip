@@ -1,8 +1,8 @@
 package duke.command;
 
-import duke.Storage;
-import duke.TaskList;
-import duke.Ui;
+import duke.backend.Storage;
+import duke.backend.TaskList;
+import duke.ui.Ui;
 
 /**
  * Represents an action corresponding to a user input.

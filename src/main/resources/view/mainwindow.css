@@ -1,4 +1,5 @@
-.anchor {
-    -fx-background-image:url('../images/background_image.jpg');
-    -fx-background-size: cover;
+.background {
+    -fx-background-image:url('../images/soccat_background.jpg');
+    -fx-background-size: 100% 100%;
+    -fx-background-position: bottom center;
 }

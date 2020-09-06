@@ -1,10 +1,11 @@
-package duke;
+package duke.backend;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import duke.ui.Ui;
 import duke.exception.DukeInvalidIndexException;
 import duke.task.Deadline;
 import duke.task.Event;

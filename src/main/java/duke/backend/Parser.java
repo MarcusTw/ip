@@ -1,4 +1,4 @@
-package duke;
+package duke.backend;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -204,7 +204,7 @@ public class Parser {
      * @return ListDateCommand with specific date.
      * @throws DukeInvalidDateTimeInputException If date and time inputted is erroneous.
      */
-    public static ListDateCommand listDate(String command) throws DukeInvalidDateTimeInputException {
+    public static Command listDate(String command) throws DukeInvalidDateTimeInputException {
         try {
             String dateString = command.substring(5);
             String[] dateToken = dateString.split("/");
@@ -214,6 +214,8 @@ public class Parser {
             throw new DukeInvalidDateTimeInputException("OOPS!!! Invalid date format!");
         } catch (DateTimeException e) {
             throw new DukeInvalidDateTimeInputException("OOPS!!! Invalid date. Date to not exist!");
+        } catch (NumberFormatException e) {
+            return new UnknownCommand();
         }
     }
 
@@ -228,6 +230,9 @@ public class Parser {
         try {
             String[] tokens = command.split("find ");
             String keyword = tokens[1];
+            if (keyword.equals(" ")) {
+                throw new DukeEmptyKeywordException();
+            }
             return new FindCommand(keyword);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new DukeEmptyKeywordException();

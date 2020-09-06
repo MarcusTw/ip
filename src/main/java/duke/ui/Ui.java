@@ -1,5 +1,6 @@
-package duke;
+package duke.ui;
 
+import duke.backend.TaskList;
 import duke.task.Task;
 
 /**
